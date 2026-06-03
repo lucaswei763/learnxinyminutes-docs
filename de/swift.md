@@ -2,7 +2,7 @@
 contributors:
   - ["Grant Timmerman", "http://github.com/grant"]
   - ["Christopher Bess", "http://github.com/cbess"]
-  - ["Joey Huang", "http://github.com/kamidox"]  
+  - ["Joey Huang", "http://github.com/kamidox"]
   - ["Anthony Nguyen", "http://github.com/anthonyn60"]
 translators:
     - ["Jonas Wippermann", "http://vfuc.co"]
@@ -29,21 +29,21 @@ import UIKit
 
 // In Swift 2 wurden println und print zusammengefasst in eine print-Methode. Es wird automatisch ein Zeilenumbruch angehängt.
 print("Hello, world!") // println ist jetzt print
-print("Hello, world!", appendNewLine: false) // printen ohne Zeilenumbruch am Ende
+print("Hello, world!", terminator : "") // printen ohne Zeilenumbruch am Ende
 
-// Variablen (var) können nach der Initialisierung verändert werden 
-// Konstanten (let) können nach der Initialisierung NICHT verändert werden 
+// Variablen (var) können nach der Initialisierung verändert werden
+// Konstanten (let) können nach der Initialisierung NICHT verändert werden
 
 var myVariable = 42
 let øπΩ = "value" // Unicode-Variablennamen
 let π = 3.1415926
 let convenience = "keyword" // Kontext-abhängiger Variablenname
-let weak = "keyword"; let override = "another keyword" // Instruktionen können durch ein Semikolon aufgeteilt werden
+let weak = "keyword"; let override = "another keyword" // Anweisungen können durch ein Semikolon aufgeteilt werden
 let `class` = "keyword" // Nutze "Backticks" um Schlüsselwörter als Variablennamen zu verwenden
 let explicitDouble: Double = 70 // Typ explizit festgelegt
 let intValue = 0007 // 7
 let largeIntValue = 77_000 // 77000
-let label = "some text " + String(myVariable) // Casting
+let label = "some text " + String(myVariable) // Typkonvertierung
 let piText = "Pi = \(π), Pi 2 = \(π * 2)" // String Interpolation
 
 // Build-spezifische Werte
@@ -64,7 +64,7 @@ print("Build value: \(buildValue)") // Build value: 7
     Optional<T> ist ein Enum.
 */
 var someOptionalString: String? = "optional" // Kann nil sein
-// Genau wie oben, aber ? ist ein postfix operator (Syntax Candy)
+// Genau wie oben, aber ? ist ein postfix operator (Syntaktische Vereinfachung)
 var someOptionalString2: Optional<String> = "optional"
 
 if someOptionalString != nil {
@@ -79,8 +79,9 @@ someOptionalString = nil
 
 // Implizit entpackter Optionalwert
 var unwrappedString: String! = "Value is expected."
-// Genau wie oben, aber ! ist ein postfix operator (noch mehr Syntax Candy)
+// Genau wie oben, aber ! ist ein postfix operator (noch mehr syntaktische Vereinfachung)
 var unwrappedString2: ImplicitlyUnwrappedOptional<String> = "Value is expected."
+// FIXME: Zu beheben
 
 if let someOptionalStringConstant = someOptionalString {
     // hat einen (`Some`) Wert, nicht nil
@@ -92,8 +93,8 @@ if let someOptionalStringConstant = someOptionalString {
 // Swift unterstützt das festlegen von Werten eines beliebigen Typens
 // AnyObject == id
 // Im Gegensatz zum Objective-C `id`, funktioniert AnyObject mit jeglichen Werten (Class, Int, struct, etc)
-var anyObjectVar: AnyObject = 7
-anyObjectVar = "Changed value to a string, not good practice, but possible."
+var anyVar: Any = 7
+anyVar = "Changed value to a string, not good practice, but possible."
 
 /*
     Ein Kommentar
@@ -108,16 +109,16 @@ anyObjectVar = "Changed value to a string, not good practice, but possible."
 //
 
 /*
-    Array und Dictionary-Typen sind structs. 
+    Array und Dictionary-Typen sind structs.
     Deswegen implizieren `let` und `var` bei der Initialisierung auch ob sie änderbar (var) oder unveränderlich (let) sind.
 */
 
 // Array
 var shoppingList = ["catfish", "water", "lemons"]
 shoppingList[1] = "bottle of water"
-let emptyArray = [String]() // let == unveränderlich
-let emptyArray2 = Array<String>() // genau wie oben
-var emptyMutableArray = [String]() // var == änderbar
+let emptyArray = [String][] // let == unveränderlich
+let emptyArray2 = Array<String>[] // genau wie oben
+var emptyMutableArray = [String][] // var == änderbar
 
 
 // Dictionary
@@ -157,10 +158,10 @@ for (key, value) in dict {
 }
 
 // for-Schleife (range)
-for i in -1...shoppingList.count {
+for i in -1..<shoppingList.count {
     print(i)
 }
-shoppingList[1...2] = ["steak", "peacons"]
+shoppingList[1...2] = ["steak", "pecans"]
 // ..< schließt letzte Nummer aus
 
 // while-Schleife
@@ -169,13 +170,13 @@ while i < 1000 {
     i *= 2
 }
 
-// do-while-Schleife
-do {
+// repeat-while-Schleife
+repeat {
     print("hello")
 } while 1 == 2
 
 // Switch
-// Sehr mächtig, wie `if` statement mit Syntax Candy
+// Sehr mächtig, wie `if` statement mit Syntaktische Vereinfachung
 // Unterstützt Strings, Objekt-Instanzen und primitive Typen (Int, Double, etc)
 let vegetable = "red pepper"
 switch vegetable {
@@ -215,10 +216,10 @@ func greet(name: String, day: String) -> String {
 greet("Bob", "Tuesday")
 
 // Ähnlich wie oben, bloß anderes Funktions-Parameter-Verhalten
-func greet2(#requiredName: String, externalParamName localParamName: String) -> String {
+func greet2(_ requiredName: String, externalParamName localParamName: String) -> String {
     return "Hello \(requiredName), the day is \(localParamName)"
 }
-greet2(requiredName:"John", externalParamName: "Sunday")
+greet2("John", externalParamName: "Sunday")
 
 
 // Funktion, welche mehrere Werte in einem Tupel zurückgibt
@@ -240,7 +241,7 @@ func setup(numbers: Int...) {
 }
 
 // Funktionen übergeben und zurückgeben
-func makeIncrementer() -> (Int -> Int) {
+func makeIncrementer() -> ((Int) -> Int) {
     func addOne(number: Int) -> Int {
         return 1 + number
     }
@@ -250,7 +251,7 @@ var increment = makeIncrementer()
 increment(7)
 
 // Übergabe via Referenz ("Pass by reference")
-func swapTwoInts(inout a: Int, inout b: Int) {
+func swapTwoInts(a: inout Int, b: inout Int) {
     let tempA = a
     a = b
     b = tempA
@@ -268,33 +269,36 @@ var numbers = [1, 2, 6]
 
 // Funktionen sind besondere Closures ({})
 
-// Closure Beispiel
-// `->` teilt Parameter und Rückgabe-Typ
-// `in` teilt den Closure Header vom Body
-numbers.map({
-    (number: Int) -> Int in
-    let result = 3 * number
-    return result
+// Closure-Beispiel:
+// `->` trennt Parameter und Rückgabetyp
+// `in` trennt den Closure-Header vom Body
+numbers = numbers.map({
+(number: Int) -> Int in
+let result = 3 * number
+return result
 })
 
-
-// Wenn der Typ bekannt ist, wie oben, kann folgendes getan werden
-numbers = numbers.map({ number in 3 * number })
-// oder sogar dies
-//numbers = numbers.map({ $0 * 3 })
+// Wenn der Typ bekannt ist, kann die Schreibweise verkürzt werden:
+numbers = numbers.map { number in 3 * number }
 
 print(numbers) // [3, 6, 18]
 
-// "Schleppende Closure" (Trailing Closure)
-numbers = sorted(numbers) { $0 > $1 }
+
+// --- Drei Möglichkeiten zur Sortierung von Arrays ---
+
+// 1. Sortieren in standardmäßig aufsteigender Reihenfolge (liefert ein neues Array)
+numbers.sort()
+
+// 2. Sortieren mit einer expliziten Closure-Bedingung (absteigend)
+numbers = numbers.sorted(by: { $0 > $1 })
 
 print(numbers) // [18, 6, 3]
 
-// Sehr verkürzt, da sich der Typ durch den < Operator ableiten lässt
-
-numbers = sorted(numbers, < )
+// 3. Kürzeste Schreibweise durch direkte Übergabe des Operators (< für aufsteigend)
+numbers = numbers.sorted(by: <)
 
 print(numbers) // [3, 6, 18]
+
 
 //
 // MARK: Strukturen
@@ -305,14 +309,14 @@ print(numbers) // [3, 6, 18]
 struct NamesTable {
     let names = [String]()
     
-    // Eigendefiniertes subscript
+    // Eigenes Subscript
     subscript(index: Int) -> String {
         return names[index]
     }
 }
 
 
-// Strukturen haben eine automatisch generierte, designierte Initialisierungsfunktion
+// Strukturen haben eine automatisch generierte, designierte Initializer
 let namesTable = NamesTable(names: ["Me", "Them"])
 let name = namesTable[1]
 print("Name is \(name)") // Name is Them
@@ -324,7 +328,8 @@ print("Name is \(name)") // Name is Them
 // Klassen, Strukturen und deren Member haben drei Ebenen der Zugriffskontrolle
 // Es gibt: internal (default), public, private
 
-public class Shape {
+// Shape muss von NSObject erben, da MyShape später ein @objc-Protokoll verwendet.
+public class Shape: NSObject{
     public func getArea() -> Int {
         return 0;
     }
@@ -348,7 +353,7 @@ internal class Rect: Shape {
         }
     }
     
-    // "Lazy" (faules) Laden einer Property, sie bleibt uninitialisiert (nil),
+    // "Lazy" verzögerte Initialisierung einer Property, sie bleibt uninitialisiert (nil),
     // bis sie aufgerufen wird
     lazy var subShape = Rect(sideLength: 4)
     
@@ -356,7 +361,7 @@ internal class Rect: Shape {
     // aber trotzdem Code vor und nach dem Setzen eines Variablenwertes laufen soll,
     // kann "willSet" und "didSet" benutzt werden
     var identifier: String = "defaultID" {
-        // der `willSet` Parameter wird der Variablenname für den neuen Wert sein 
+        // der `willSet` Parameter wird der Variablenname für den neuen Wert sein
         willSet(someIdentifier) {
             print(someIdentifier)
         }
@@ -394,7 +399,7 @@ print(mySquare.sideLength) // 4
 // Casten der Instanz
 let aShape = mySquare as Shape
 
-// Vergleiche Instanzen, nicht äquivalent zum == , welches Objekte vergleicht ("equal to") 
+// Vergleiche Instanzen, nicht äquivalent zum == , welches Objekte vergleicht ("equal to")
 if mySquare === mySquare {
     print("Yep, it's mySquare")
 }
@@ -528,7 +533,7 @@ class MyShape: Rect {
 // `extension`s: (Erweiterungen), erweitere Typen um zusätzliche Funktionalität
 
 // Square entspricht jetzt dem `Printable` Protokoll
-extension Square: Printable {
+extension Square: CustomStringConvertible {
     var description: String {
         return "Area: \(self.getArea()) - ID: \(self.identifier)"
     }
@@ -555,7 +560,7 @@ print(14.multiplyBy(3)) // 42
 // des Generics festzulegen
 
 func findIndex<T: Equatable>(array: [T], valueToFind: T) -> Int? {
-    for (index, value) in enumerate(array) {
+    for (index, value) in array.enumerated() {
         if value == valueToFind {
             return index
         }
@@ -570,11 +575,11 @@ print(foundAtIndex == 2) // true
 //      / = - + * % < > ! & | ^ . ~
 // oder
 // Unicode Mathematik, Symbole, Pfeile, Dingbat, und Linien/Box - Zeichen
-prefix operator !!! {}
+prefix operator !!!
 
 
 // Ein Prefix-Operator, welcher die Seitenlänge verdreifacht
-prefix func !!! (inout shape: Square) -> Square {
+prefix func !!! (shape: inout Square) -> Square {
     shape.sideLength *= 3
     return shape
 }
